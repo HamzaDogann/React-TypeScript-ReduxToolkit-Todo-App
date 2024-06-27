@@ -1,0 +1,320 @@
+//Basic Types: string, number, boolean, undefined, null, object
+
+let firstName :string = "Hamza";
+let age:number = 20;
+let result :boolean = true;
+
+//-------------------------------------------
+
+//Union Types -> Birden fazla type'a izin ver.
+
+let ageNew:string | number | boolean  = true; 
+
+//-------------------------------------------
+
+//Literal Types -> Type belirlemesi değil değer setlemesidir.
+
+let statusResult : 'pending' | 'approved' | 'rejected';
+//statusResult'a bu değerlerden biri setlenebilir başka bir değer alamazsın demektir.
+statusResult = "pending";
+statusResult="approved";
+statusResult="Hamza";
+// Yalnızca yukarıda belirtilen, pending, approved, rejected değerlerinden birini alabilir başka bir değeri setleyemeyiz.
+
+//-------------------------------------------
+
+//Array
+
+let names : string[] = ["Hamza","Enes","Ali"];
+let names2 : Array<string> = ["Hamza","Okan"];
+
+
+let numbers: number[] = [1,2,3];
+let numbers2 :Array<number> = [1,2,3];
+
+let mixedArray :(number| string | boolean)[] = ["Enes","Ali",3,false]
+//Hem string hem number hemde boolean kabul eden bir array tanımladık.
+
+//-------------------------------------------
+
+//Interface - Type :  Kendi tipimizi oluşturmaya yarar.
+
+//Type -> Type keyword'u ile kendime ait bir tip oluşturuyorum ismi user olsun
+
+type User ={
+    name:string,
+    age:number
+}
+
+let array2:User[] = [
+    {name:"Ali", age:22}
+];//User tipimizle denk olmalı name, ve age belirtilmeli
+
+const object1:User = {
+    name:"Enes",
+    age:25
+}
+
+//Interface -> Miras alma ile ilgili kullanılır şuanlık type ile aynı işlemi yapar.
+
+interface User2{
+    name:string,
+    age:number
+}
+
+const object2:User2={
+    name:"Hamza",
+    age:22
+}
+
+//Optional Types
+
+interface User3{
+    name:string,
+    age?:number
+    //optional yani age için değer ataması yapılabilir yapılmayada bilir demektir.
+}
+
+const object3:User3 ={
+    name:"Hacı"
+}
+//User3 interface'i age tanımlasınını opsiyonel olarak bıraktı yani yazmadığımızda bir hata vermeyecek.
+
+
+//-------------------------------------------
+
+//Function 
+
+function topla(a,b){
+    console.log(a+b);
+}
+
+topla(5,"x");
+
+//bunu engellememiz gerek.
+
+function topla2(a:number, b:number){
+    console.log(a+b);
+}
+
+topla2(2,3);
+
+//--------------------------
+
+//Geri belirtdiğimiz tipte değer döndürme işlemi için,
+
+function topla3(a:number,b:number) :number{
+    return a+b;
+    return "hamza"; //dönemeyiz..
+}// :number olarak belirledik yani topla3 en son dönerken number döneceğini belirtiyoruz.
+
+const sonuc = topla3(4,2);
+
+
+//--------------------------
+
+function write(array: Array<string>){
+    array.forEach((value:string)=> console.log(value));
+}
+
+let array :Array<string> = ["Hamza","Okan"];
+
+write(array);
+
+//Geriye bir şey döndürmeyen bir function olduğu zaman ise,
+
+function write2(array: Array<string>) :void{
+    array.forEach((value:string)=> console.log(value));
+}
+
+//şeklinde
+// :void -> geriye değer döndürme
+
+
+interface UserNew{
+    name:string,
+    age:number
+}
+
+function writeConsole(array: Array<UserNew>) :void{
+    array.forEach((value:UserNew)=> console.log(value));
+}
+
+const obj1:UserNew ={
+   name:"Okan",
+   age:13
+}
+
+const obj2:UserNew ={
+   name:"Hamza",
+   age:13
+}
+
+
+
+let myArray :Array<UserNew> = [obj1,obj2];
+
+
+//Generics -> O anki kullanım yapısına hazır olmasını sağlar. Örneğin dışarıdan gelen değer string ise ona uyum sağlar yani kabul eder değilse yani number tipindeyse ona da uyum sağlar diyebiliriz.
+
+function yazdir(array :string[]){
+ console.log(array);
+}
+
+
+yazdir(["enes","hamza","okan"]);
+yazdir([1,2,3]);
+
+
+function yazdir2<T>(array: T[]):void{
+    console.log(array);
+}
+
+//Buradaki <T> ben bir generic fonksiyonum demektir.
+//Dışarıdan herhangi türde gelen değeri kabul ederim demektir "array: T[] , fonksiyonAdi<T> şeklinde generiği tanımlarız.
+yazdir2(["Hamza","Ali"]);
+yazdir2([true,false]);
+yazdir2([1,2]);
+//Kabul ediyor.
+
+
+//interface GenericType
+
+interface GenericType<T>{
+    name:string,
+    age:number,
+    salary: T[]
+}
+//Generic bir interface oluşturduk. <T> string veya number ya da boolean o an obje ne kullanmak istiyorsa ona bürünmesini temsil eder.
+
+const obj3 : GenericType<string> ={
+    name:"Enes",
+    age:25,
+    salary: ["5000","10000","15000"]
+}
+
+const obj4 : GenericType<number> ={
+    name:"Hamza",
+    age:19,
+    salary:[1,2,3]
+}
+
+
+function newWrite<T>(array: GenericType<T>[]):void{
+    array.forEach((val:GenericType<T>)=> console.log(val))
+}
+
+let newArray :GenericType<number| string>[] = [obj3 , obj4];
+
+
+
+//extends
+
+interface OrtakAlanlar{
+    id:string,
+    createdTime:string,
+    createdUser:string,
+}
+
+interface Musteri extends OrtakAlanlar {
+    customerNumber:string,
+}
+
+interface Kurum extends OrtakAlanlar{
+    kurumNo:string,
+}
+
+
+const kurum : Kurum={
+    id:"1",
+    createdTime:"08.05.2000",
+    createdUser:"Hamza",
+    kurumNo:"123"
+}
+
+//--------------------------
+
+
+//Partial , Required, ReadOnly, pick, omit
+
+//Partial -> Opsiyonel bırakmak istediğimiz onlarca değişken olabilir teker teke age?:string şeklinde yapacağımıza "Partial<User>" ile objede belirtebiliriz. 
+
+interface Admin{
+    name: string,
+    age:number,
+    lastname: string,
+    tckn:string,
+    birthdate:string
+}
+
+const admin :Partial<Admin>={
+    name:"hamza",
+    age:20
+}
+
+//--------------------------
+
+//Required -> Herşeyi doldurmak zorunda bırakır.
+
+interface Admin2{
+    name?: string,
+    age?:number,
+    lastname?: string,
+    tckn?:string,
+    birthdate?:string
+}
+const admin2 :Required<Admin>={
+    name:"hamza",
+    age:20
+}//admin2 interface içinde opsiyonel bırakılsalar bile, Required ile Admini sarmalamalıyız. Bu sayede herşey gereklidir gibi olacaktır.
+
+//--------------------------
+
+//Readonly  -> Sadece okunabilir anlamına gelir
+
+interface Admin3{
+    name?: string,
+    age?:number,
+    lastname?: string,
+    tckn?:string,
+    birthdate?:string
+}
+const admin3 :Readonly<Admin3>={
+    name:"hamza",
+    age:20
+}
+
+// admin3' ü sadece okuyabiliriz. Değiştiremeyiz.
+
+//--------------------------
+
+// Pick -> Yalnızca lazım değişkeni belirtip onu ele almak için diyebiliriz,
+
+interface Admin4{
+    name?: string,
+    age?:number,
+    lastname?: string,
+    tckn?:string,
+    birthdate?:string
+}
+const admin4 :Pick<Admin4, "name">={
+    name:"hamza",
+}// Bana name yeter baba diyor.
+
+
+// Omit -> pick'in yaptığının tam tersi yani örneğin 
+
+interface Admin5{
+    name?: string,
+    age?:number,
+    lastname?: string,
+    tckn?:string,
+    birthdate?:string
+}
+const admin5 :Omit<Admin5, "name">={
+    name:"hamza",
+    age:12,
+    lastname: "deneme",
+    tckn:"deneme",
+    birthdate:"deneme"
+}// Bana name dışında ne verirsen ver dayı diyor.
